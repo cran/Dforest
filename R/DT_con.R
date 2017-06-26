@@ -1,0 +1,107 @@
+#' Construct Decision Tree model with pruning
+#'
+#' @param X dataset
+#' @param Y data_Labels
+#' @return Decision Tree Model with pruning
+#'   Implemented by rpart
+#' @seealso \code{rpart}
+#'
+#' @import rpart
+#' @export
+#'
+
+Con_DT = function (X,Y){
+
+  DT_Model <- rpart(Y ~ ., method="class", data=X)
+
+  #cp=fit$cptable[which.min((fit$cptable[,"rel error"]+fit$cptable[,"xstd"])-fit$cptable[,"xerror"]),"CP"]
+
+  #cp=fit$cptable[min(which((fit$cptable[,"rel error"]+fit$cptable[,"xstd"])<fit$cptable[,"xerror"])),"CP"]
+
+  #DT_Model <- prune(fit,cp=cp)
+
+  return(DT_Model)
+
+}
+
+#' Doing Prediction with Decision Tree model
+#'
+#' @source rpart
+#' @param X dataset
+#' @param model Decision Tree Model
+#' @return Decision Tree Predictions
+#'   Different endpoints presented in multiple columns
+#' @seealso \code{rpart}
+#'
+#' @importFrom stats predict
+#'
+#' @export
+#'
+
+Pred_DT = function (model,X){
+
+  Label=predict(model,X)
+
+  return(Label)
+
+}
+
+#' Calling Accuracy and Misclassification from Decision Tree Predictions
+#'
+#' @param pred Predictions
+#' @param label Known-endpoint
+#' @return result$accuracy: Predicting Accuracy
+#' @return result$MIS:  MisClassfication Counts
+#'
+#' @export
+#'
+#'
+
+DF_acc= function (pred,label){
+  Pred_label = colnames(pred)[max.col(pred,ties.method = "first")]
+  True_prediction = length(which(Pred_label==label))
+
+  MIS = length(label)-True_prediction
+  ACC = round(True_prediction / length(label),3)
+
+  label_level = levels(factor(label))
+
+  accuracy_sep = matrix(0,nrow=length(label_level),ncol=1)
+  for (i in 1:length(label_level)){
+    accuracy_sep[i,1]=length(which(Pred_label==label & label == label_level[i]))/length(which(label == label_level[i]))
+  }
+  bACC = mean(accuracy_sep)
+
+  if (length(levels(factor(label)))==2){
+    TP = length(which(Pred_label==label & Pred_label ==label_level[1]))
+    TN = length(which(Pred_label==label & Pred_label ==label_level[2]))
+    FP = length(which(Pred_label!=label & Pred_label ==label_level[1]))
+    FN = length(which(Pred_label!=label & Pred_label ==label_level[2]))
+
+    MCC=((TP*TN)-(FP*FN))/sqrt((TP+FP)*(TP+FN)*(TN+FP)*(TN+FN))
+  }else{
+    MCC=-1 # Not Available for multi-class prediction
+  }
+  result = list(ACC=ACC,MIS=MIS,MCC=MCC,bACC=bACC)
+  return(result)
+}
+
+
+#' T-test for feature selection
+#'
+#'
+#' @param X X variable matrix
+#' @param Y Y label
+#'
+#' @importFrom stats t.test
+#' @importFrom methods is
+#'
+DF_calp = function(X, Y){
+  Y_lab = levels(Y)
+  y1 = which(Y==Y_lab[1])
+  y2 = which(Y==Y_lab[2])
+  pV = apply(X, 2,
+             function(x){ tt <- try(t.test(x=x[y1], y=x[y2]), silent=TRUE ); if(is(tt, "try-error")) 1 else tt$p.value});
+  return(pV)
+}
+
