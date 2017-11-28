@@ -24,4 +24,3 @@ Doing Prediction with Decision Tree model
 \seealso{
 \code{rpart}
 }
-

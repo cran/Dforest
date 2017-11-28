@@ -5,6 +5,8 @@
 #' @author Leihong.Wu
 #'
 #' @export
+#' @examples
+#'   Dforest()
 
 # Load Data
 Dforest = function (){

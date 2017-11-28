@@ -14,4 +14,3 @@ DF_calp(X, Y)
 \description{
 T-test for feature selection
 }
-

@@ -4,12 +4,16 @@
 \alias{Con_DT}
 \title{Construct Decision Tree model with pruning}
 \usage{
-Con_DT(X, Y)
+Con_DT(X, Y, min_split = 10, cp = 0.01)
 }
 \arguments{
 \item{X}{dataset}
 
 \item{Y}{data_Labels}
+
+\item{min_split}{minimum number of node in each leaf}
+
+\item{cp}{pre-defined Complexity Parameter (CP) rpart program}
 }
 \value{
 Decision Tree Model with pruning
@@ -21,4 +25,3 @@ Construct Decision Tree model with pruning
 \seealso{
 \code{rpart}
 }
-

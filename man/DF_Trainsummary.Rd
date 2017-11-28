@@ -14,4 +14,3 @@ DF_Trainsummary(used_model, plot = T)
 \description{
 Draw plot for Dforest test results
 }
-

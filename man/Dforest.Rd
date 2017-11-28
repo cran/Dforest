@@ -11,7 +11,9 @@ Dforest()
 Demo script to lean Decision Forest package
   Demo data are located in data/ folder
 }
+\examples{
+  Dforest()
+}
 \author{
 Leihong.Wu
 }
-

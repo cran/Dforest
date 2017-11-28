@@ -17,4 +17,8 @@ Keep_feat: qualified features in data matrix after filtering
 \description{
 Decision Forest algorithm: Data pre-processing, remove All-Zero columns/features and high correlated features
 }
-
+\examples{
+ ##data(iris)
+  X = iris[,1:4]
+  Keep_feat = DF_dataPre(X)
+}

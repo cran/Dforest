@@ -1,6 +1,6 @@
-\name{Data_simple}
+\name{data_dili}
 \docType{data}
-\alias{Data_simple}
+\alias{data_dili}
 \title{QSAR dataset with DILI endpoint for demo}
 \description{
   This data set gives the DILI endpoint of various compounds (Most or No DILI-concern)
@@ -8,8 +8,8 @@
 }
 \usage{rivers}
 \format{A List containing two vectors:
- X contains 176 observations and 777 variables.
- Y contains DILI endpoints of 176 observations
+ X contains 958 observations and 777 variables.
+ Y contains DILI endpoints of 958 observations
 }
 \source{In-house data}
 \references{

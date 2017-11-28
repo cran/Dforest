@@ -16,9 +16,9 @@
 #' @export
 #'
 #' @examples
-#'   data(demo_simple)
-#'   X = Data_simple$X
-#'   Y = Data_simple$Y
+#'   # data(demo_simple)
+#'   X = data_dili$X
+#'   Y = data_dili$Y
 #'   names(Y)=rownames(X)
 #'
 #'   random_seq=sample(nrow(X))
@@ -29,37 +29,39 @@
 #'   Test_X = X[random_seq[split_sample[[1]]],]
 #'   Test_Y = Y[random_seq[split_sample[[1]]]]
 #'
-#'   used_model = DF_train(Train_X, Train_Y,stop_step=4, Method = "MCC")
+#'   used_model = DF_train(Train_X, Train_Y)
 #'   Pred_result = DF_pred(used_model,Test_X,Test_Y)
-#'   DF_ConfPlot(Pred_result, Test_Y, bin = 40)
 #'
 #'
 #'
 DF_pred = function(DT_models,X,Y=NULL){
+  if (length(DT_models$models)>0){
+    label_num = dim(DT_models$pred)[2]
+    DT_models = DT_models$models
 
-  label_num = dim(DT_models$pred)[2]
-  DT_models = DT_models$models
+    Pred_result=list()
 
-  Pred_result=list()
-
-  acc_total=matrix(0,nrow=nrow(X),ncol=label_num)
-  for (i in 1:length(DT_models)){
-    Pred_result[[i]] = predict(DT_models[[i]],X)
-    tmp_pred = Pred_result[[i]]
-    acc_total= acc_total+tmp_pred
-  }
-  pred = colnames(acc_total)[max.col(acc_total,ties.method = "first")]
-  pred_conf = apply(acc_total,1,max)/length(DT_models)
-  CV_bind = cbind(pred,pred_conf)
-  rownames(CV_bind)=rownames(X)
-  if (is.null(Y)){
-    ACC = "Not available without known labels!"
+    acc_total=matrix(0,nrow=nrow(X),ncol=label_num)
+    for (i in 1:length(DT_models)){
+      Pred_result[[i]] = predict(DT_models[[i]],X)
+      tmp_pred = Pred_result[[i]]
+      acc_total= acc_total+tmp_pred
+    }
+    pred = colnames(acc_total)[max.col(acc_total,ties.method = "first")]
+    pred_conf = apply(acc_total,1,max)/length(DT_models)
+    CV_bind = cbind(pred,pred_conf)
+    rownames(CV_bind)=rownames(X)
+    if (is.null(Y)){
+      performance = "Not available without known labels!"
+    }else{
+      performance = DF_perf(pred,Y)
+    }
+    result = list(performance=performance, predictions=CV_bind)
   }else{
-    label=Y
-    True_prediction = length(which(pred==label))
-    MIS = length(label)-True_prediction
-    ACC = round(True_prediction / length(label),3)
+    cat("No valid model was constructed! please Check your model variable \n")
+    result = list()
+    result$performance = NA
+    result$predictions = NA
   }
-  result = list(accuracy=ACC, predictions=CV_bind)
   return(result)
 }

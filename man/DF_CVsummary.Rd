@@ -4,16 +4,13 @@
 \alias{DF_CVsummary}
 \title{output summary for Dforest Cross-validation results}
 \usage{
-DF_CVsummary(CV_result, plot = T, plot_col = 2)
+DF_CVsummary(CV_result, plot = T)
 }
 \arguments{
 \item{CV_result}{Training Dataset}
 
 \item{plot}{if TRUE (default), draw plot}
-
-\item{plot_col}{#plots in each row}
 }
 \description{
 Draw plot for Dforest Cross-validation results
 }
-
